@@ -1,0 +1,8 @@
+name: imgexport
+channels:
+  - conda-forge
+dependencies:
+  - python=3.10
+  - OpenCV
+  - watchdog
+  - pillow
