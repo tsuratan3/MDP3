@@ -91,7 +91,8 @@ def process_file(file_path, ep):
         
         dp = os.path.join(BUPS, file_name)
         config_bool_name = open_config()
-        print(f"随時命名は{config_bool_name}です")
+        if DEBUG:
+            print(f"随時命名は{config_bool_name}です")
         if (config_bool_name == "1"):
             bn, extension = os.path.splitext(file_name)
             if DEBUG:
@@ -111,17 +112,17 @@ def process_file(file_path, ep):
         if DEBUG:
             print(f"ファイルに移動します：{file_path} → {dp}")
         
-            if (os.path.dirname(file_path) == DLF):
-                shutil.move(file_path, dp)
-                if DEBUG:
-                    print(f"{DLF}からファイルを移動しました：{file_path} → {dp}")
-            elif (os.path.dirname(file_path) == SSF):
-                shutil.copy2(file_path, dp)
-                if DEBUG:
-                    print(f"{SSF}からファイルを複製しました：{file_path} → {dp}")
-                ep.add(file_path)
-            else:
-                print("ファイルが正しく移動しませんでした。")
+        if (os.path.dirname(file_path) == DLF):
+            shutil.move(file_path, dp)
+            if DEBUG:
+                print(f"{DLF}からファイルを移動しました：{file_path} → {dp}")
+        elif (os.path.dirname(file_path) == SSF):
+            shutil.copy2(file_path, dp)
+            if DEBUG:
+                print(f"{SSF}からファイルを複製しました：{file_path} → {dp}")
+            ep.add(file_path)
+        else:
+            print("ファイルが正しく移動しませんでした。")
                 
         return True
        
