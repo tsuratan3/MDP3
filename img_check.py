@@ -20,7 +20,7 @@ APP = None
 if not os.path.exists(BUPS):
     os.makedirs(BUPS)
     print(f"作業ディレクトリを作成：{BUPS}")
-
+#コンフィグファイル読み込み
 def open_config():
     print("コンフィグファイルを開きました")
     config_open = open('config.json','r')
