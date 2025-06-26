@@ -21,7 +21,7 @@ def save_config(naming, compression):
 
 def main():
     root = tk.Tk()
-    root.title("画像ダウンロードマネージャ")
+    root.title("Watch Man")
     root.geometry("400x420")
 
     # 設定変数
