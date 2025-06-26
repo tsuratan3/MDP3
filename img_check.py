@@ -326,7 +326,7 @@ class DownLoadGurding:
         print(f"監視中：{self.dlf}")
         print(f"監視中：{self.ssf}")
         print(f"ファイルの移動先：{self.bups}")
-        print("ダウンロードフォルダとスクリーンショットフォルダの監視を開始しました。停止するにはCtrl+Cを押してください。")
+        print("ダウンロードフォルダとスクリーンショットフォルダの監視を開始しました。")
         if DEBUG:
             print("デバッグモード：有効")
         try:
