@@ -23,7 +23,7 @@ if not os.path.exists(BUPS):
 #コンフィグファイル読み込み
 def open_config():
     print("コンフィグファイルを開きました")
-    config_open = open('config.json','r',encording="utf-8")
+    config_open = open('config.json','r',encoding="utf-8")
     config_load = json.load(config_open)
     bool_name = config_load['naming']
     return  bool_name
