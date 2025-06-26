@@ -1,10 +1,12 @@
 import os
-import glob
+import json
 import time
 import shutil
+import subprocess
 import threading
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
+from tkinter import messagebox
 
 DLF = r""
 SSF = r""
@@ -12,11 +14,19 @@ BUPS = r"C:\BackUp_Pictures"
 INTERVAL = 3
 DEBUG =True
 SST = time.time()
+APP = None
 
 #フォルダ準備
 if not os.path.exists(BUPS):
     os.makedirs(BUPS)
     print(f"作業ディレクトリを作成：{BUPS}")
+
+def open_config():
+    print("コンフィグファイルを開きました")
+    config_open = open('config.json','r')
+    config_load = json.load(config_open)
+    bool_name = config_load['naming']
+    return  bool_name
 
 def _reguler_name_dl():
     dp = os.path.join(os.environ['USERPROFILE'], 'Downloads')
@@ -39,8 +49,17 @@ def is_picture_file(file_path):
     """画像ファイル(.jpgまたは.jpeg)かどうか判定"""
     return file_path.lower().endswith(".jpg") or file_path.lower().endswith(".jpeg") or file_path.lower().endswith(".png")
 
+def start_name_gui():
+    try:
+        APP = subprocess.run(["python", "naming_gui.py", str()],capture_output=True, text=True, check=True)
+        value = APP.stdout.strip()
+        return value
+    except Exception as e:
+        messagebox.showerror("エラー", f"命名GUIの起動に失敗しました\n{e}")
+        return None
+
 def process_file(file_path, ep):
-    """ファイルを処理してワークフォルダに移動"""
+    """ファイルを処理してバックアップフォルダに移動"""
     #基本的なチェック
     if not os.path.exists(file_path) or os.path.isdir(file_path):
         return False
@@ -70,24 +89,42 @@ def process_file(file_path, ep):
         if not os.path.exists(file_path) or os.path.getsize(file_path) == 0:
             return False
         
-        #移動先のパスを作成（重複回避）
         dp = os.path.join(BUPS, file_name)
-        if os.path.exists(dp):
+        config_bool_name = open_config()
+        print(f"随時命名は{config_bool_name}です")
+        if (config_bool_name == "1"):
             bn, extension = os.path.splitext(file_name)
+            if DEBUG:
+                print("随時即時命名を行えます。")
+            value = start_name_gui()
+            dp = os.path.join(BUPS, value+extension)
+        
+        #移動先のパスを作成（重複回避）
+        if os.path.exists(dp):
             counter = 1
             while os.path.exists(dp):
-                nn = f"{bn}_{counter}_{extension}"
+                nn = f"{value}_{counter}_{extension}"
                 dp = os.path.join(BUPS, nn)
                 counter += 1
-        
+
         #ファイルを移動
         if DEBUG:
             print(f"ファイルに移動します：{file_path} → {dp}")
         
-        shutil.move(file_path, dp)
-        print(f"ファイルを移動しました：{file_path} → {dp}")
+            if (os.path.dirname(file_path) == DLF):
+                shutil.move(file_path, dp)
+                if DEBUG:
+                    print(f"{DLF}からファイルを移動しました：{file_path} → {dp}")
+            elif (os.path.dirname(file_path) == SSF):
+                shutil.copy2(file_path, dp)
+                if DEBUG:
+                    print(f"{SSF}からファイルを複製しました：{file_path} → {dp}")
+                ep.add(file_path)
+            else:
+                print("ファイルが正しく移動しませんでした。")
+                
         return True
-    
+       
     except PermissionError:
         #ファイルがまだ使用中
         if DEBUG:
@@ -96,6 +133,8 @@ def process_file(file_path, ep):
     except Exception as e:
         print(f"{file_name}の移動中にエラーが発生しました：{e}")
         return False
+    
+
     
 
 class DownLoadGurding:
@@ -123,6 +162,11 @@ class DownLoadGurding:
         existing = set()
         for filename in os.listdir(self.dlf):
             file_path = os.path.join(self.dlf, filename)
+            if os.path.isfile(file_path):
+                existing.add(file_path)
+
+        for filename in os.listdir(self.ssf):
+            file_path = os.path.join(self.ssf, filename)
             if os.path.isfile(file_path):
                 existing.add(file_path)
         return existing
@@ -200,7 +244,7 @@ class DownLoadGurding:
             print("フォルダをスキャン中…")
         
         try:
-            #フォルダ内の全てのファイルをチェック
+            #ダウンロードフォルダ内の全てのファイルをチェック
             for filename in os.listdir(self.dlf):
                 file_path = os.path.join(self.dlf, filename)
 
@@ -236,7 +280,7 @@ class DownLoadGurding:
             print(f"フォルダをスキャン中にエラーが発生しました：{e}")
 
         try:
-            #フォルダ内の全てのファイルをチェック
+            #スクリーンショットフォルダ内の全てのファイルをチェック
             for filename in os.listdir(self.ssf):
                 file_path = os.path.join(self.ssf, filename)
 
@@ -302,12 +346,9 @@ if __name__ == "__main__":
     sp = _reguler_name_ss()
     if not os.path.exists(osp):
         SSF = _reguler_name_ss()
-        print(f"SP：{sp}")
     else:
         SSF = _reguler_name_oss()
-        print(f"OSP：{osp}")
     DLF = _reguler_name_dl()
-    print(f"{DLF},{SSF}")
     if os.path.exists(DLF) and os.path.exists(SSF):
         Gurding_Program = DownLoadGurding(DLF, SSF, BUPS)
         Gurding_Program.start()
