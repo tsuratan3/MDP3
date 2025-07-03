@@ -1,0 +1,17 @@
+watchdogs：https://qiita.com/inetcpl/items/7e83039d222c3f49c4f0
+ダウンロード監視：https://zenn.dev/headwaters/articles/f7020fd6927c8c
+f文字列：https://aiacademy.jp/media/?p=1532
+raw文字列：https://www.javadrive.jp/python/string/index4.html#google_vignette
+__name__ == __main__：https://aiacademy.jp/media/?p=1478
+__init__：https://www.school.ctc-g.co.jp/columns/hishinuma/hishinuma32.html
+set()：https://aiacademy.jp/media/?p=2945#i-0
+try:：https://www.sejuku.net/blog/23044
+glob.glob：https://www.tech-teacher.jp/blog/python-glob/
+os.environ：https://www.sejuku.net/blog/64673
+lower()：https://note.nkmk.me/python-capitalize-lower-upper-title/#upper
+tkinter：https://qiita.com/nnahito/items/ad1428a30738b3d93762
+        https://www.school.ctc-g.co.jp/columns/hishinuma/hishinuma19.html
+        https://pythonsoba.tech/tkinter/
+ttk：https://little-movie.com/entry/
+shutil：https://note.nkmk.me/python-shutil-copy-copytree/
+subprocess：https://minus9d.hatenablog.com/entry/2021/06/08/220614
