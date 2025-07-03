@@ -33,21 +33,22 @@ def main():
     naming_frame = ttk.LabelFrame(root, text="命名規則", padding=10)
     naming_frame.pack(padx=10, pady=10, fill="x")
 
-    ttk.Radiobutton(naming_frame, text="随時命名", variable=naming_var, value=True).pack(anchor="w")
-    ttk.Radiobutton(naming_frame, text="そのまま", variable=naming_var, value=False).pack(anchor="w")
+    ttk.Radiobutton(naming_frame, text="随時命名", variable=naming_var, value="1").pack(anchor="w")
+    # ttk.Radiobutton(naming_frame, text="命名統合", variable=naming_var, value="2").pack(anchor="w")
+    ttk.Radiobutton(naming_frame, text="そのまま", variable=naming_var, value="0").pack(anchor="w")
 
     # 圧縮方式
-    def on_compression_selected():
-        print("※ 圧縮機能は未実装です")
+    # def on_compression_selected():
+    #     print("※ 圧縮機能は未実装です")
     
-    def off_compression_selected():
-        print("※ 圧縮機能は未実装です")
+    # def off_compression_selected():
+    #     print("※ 圧縮機能は未実装です")
 
     compress_frame = ttk.LabelFrame(root, text="圧縮方式", padding=10)
     compress_frame.pack(padx=10, pady=10, fill="x")
 
-    ttk.Radiobutton(compress_frame, text="JPEG", variable=compress_var, value="JPEG", command=on_compression_selected).pack(anchor="w")
-    ttk.Radiobutton(compress_frame, text="そのまま", variable=compress_var, value="そのまま", command=off_compression_selected).pack(anchor="w")
+    ttk.Radiobutton(compress_frame, text="JPEG", variable=compress_var, value="JPEG").pack(anchor="w")
+    ttk.Radiobutton(compress_frame, text="Nomal", variable=compress_var, value="Nomal").pack(anchor="w")
 
     # バックアップパス
     backup_frame = ttk.Frame(root, padding=10)

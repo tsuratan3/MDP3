@@ -15,18 +15,29 @@ INTERVAL = 3
 DEBUG =True
 SST = time.time()
 APP = None
+# bool_run = False
 
 #フォルダ準備
 if not os.path.exists(BUPS):
     os.makedirs(BUPS)
     print(f"作業ディレクトリを作成：{BUPS}")
-#コンフィグファイル読み込み
-def open_config():
-    print("コンフィグファイルを開きました")
+
+def open_config_name():
+    if DEBUG:
+        print("コンフィグファイルを開きました")
     config_open = open('config.json','r',encoding="utf-8")
     config_load = json.load(config_open)
     bool_name = config_load['naming']
     return  bool_name
+
+def open_config_comp():
+    if DEBUG:
+        print("コンフィグファイルを開きました")
+    config_open = open('config.json','r',encoding="utf-8")
+    config_load = json.load(config_open)
+    or_compress = config_load['compression']
+    return  or_compress
+
 
 def _reguler_name_dl():
     dp = os.path.join(os.environ['USERPROFILE'], 'Downloads')
@@ -47,7 +58,7 @@ def is_temp_file(file_path):
 
 def is_picture_file(file_path):
     """画像ファイル(.jpgまたは.jpeg)かどうか判定"""
-    return file_path.lower().endswith(".jpg") or file_path.lower().endswith(".jpeg") or file_path.lower().endswith(".png")
+    return file_path.lower().endswith(".jpg") or file_path.lower().endswith(".jpeg") or file_path.lower().endswith(".png") or file_path.lower().endswith(".heic") or file_path.lower().endswith(".webp")
 
 def start_name_gui():
     try:
@@ -60,6 +71,7 @@ def start_name_gui():
 
 def process_file(file_path, ep):
     """ファイルを処理してバックアップフォルダに移動"""
+    global bool_run
     #基本的なチェック
     if not os.path.exists(file_path) or os.path.isdir(file_path):
         return False
@@ -90,15 +102,24 @@ def process_file(file_path, ep):
             return False
         
         dp = os.path.join(BUPS, file_name)
-        config_bool_name = open_config()
-        if DEBUG:
-            print(f"随時命名は{config_bool_name}です")
-        if (config_bool_name == "1"):
+        config_name = open_config_name()
+        config_compress = open_config_comp()
+        if (config_name == "1"):
+            # bool_run = True
+            value = start_name_gui()
             bn, extension = os.path.splitext(file_name)
             if DEBUG:
                 print("随時即時命名を行えます。")
-            value = start_name_gui()
             dp = os.path.join(BUPS, value+extension)
+        # elif (config_name == "2"):
+        #     if(bool_run):
+        #         value = start_name_gui()
+        #         bool_run = False
+        #     bn, extension = os.path.splitext(file_name)
+        #     if DEBUG:
+        #         print("命名統合を行えます。")
+        #     dp = os.path.join(BUPS, value+extension)
+
         
         #移動先のパスを作成（重複回避）
         if os.path.exists(dp):
@@ -113,9 +134,9 @@ def process_file(file_path, ep):
             print(f"ファイルに移動します：{file_path} → {dp}")
         
         if (os.path.dirname(file_path) == DLF):
-            shutil.move(file_path, dp)
+            shutil.copy2(file_path, dp)
             if DEBUG:
-                print(f"{DLF}からファイルを移動しました：{file_path} → {dp}")
+                print(f"{DLF}からファイルを複製しました：{file_path} → {dp}")
         elif (os.path.dirname(file_path) == SSF):
             shutil.copy2(file_path, dp)
             if DEBUG:
@@ -123,9 +144,14 @@ def process_file(file_path, ep):
             ep.add(file_path)
         else:
             print("ファイルが正しく移動しませんでした。")
-                
+
+        if (config_compress == "JPEG"):
+            try:
+                subprocess.run(["python", "compress.py"])
+            except Exception as e:
+                messagebox.showerror("エラー", f"圧縮機能の起動に失敗しました\n{e}")         
         return True
-        
+       
     except PermissionError:
         #ファイルがまだ使用中
         if DEBUG:
@@ -342,6 +368,7 @@ class DownLoadGurding:
 
 
 if __name__ == "__main__":
+    # bool_run = True
     #監視を開始
     osp = _reguler_name_oss()
     sp = _reguler_name_ss()
