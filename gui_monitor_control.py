@@ -20,6 +20,15 @@ def save_config(naming, compression):
 
 
 def main():
+    # config.json が存在しない場合はデフォルト設定で作成
+    if not os.path.exists(CONFIG_PATH):
+        default_config = {
+            "naming": "1",         # または "0" など、デフォルトの命名方式
+            "compression": "JPEG"  # デフォルトの圧縮方式
+        }
+        with open(CONFIG_PATH, "w", encoding="utf-8") as f:
+            json.dump(default_config, f, ensure_ascii=False, indent=2)
+        print("config.json を新規作成しました：", default_config)
     root = tk.Tk()
     root.title("Watch Man")
     root.geometry("400x420")
