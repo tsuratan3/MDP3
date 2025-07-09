@@ -15,7 +15,7 @@ INTERVAL = 3
 DEBUG =True
 SST = time.time()
 APP = None
-# bool_run = False
+bool_run = False
 
 #フォルダ準備
 if not os.path.exists(BUPS):
@@ -104,6 +104,8 @@ def process_file(file_path, ep):
         dp = os.path.join(BUPS, file_name)
         config_name = open_config_name()
         config_compress = open_config_comp()
+        if DEBUG:
+            print(f"命名規則は{config_name}です。")
         if (config_name == "1"):
             # bool_run = True
             value = start_name_gui()
@@ -368,7 +370,6 @@ class DownLoadGurding:
 
 
 if __name__ == "__main__":
-    # bool_run = True
     #監視を開始
     osp = _reguler_name_oss()
     sp = _reguler_name_ss()

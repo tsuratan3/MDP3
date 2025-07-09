@@ -48,7 +48,7 @@ def main():
     compress_frame.pack(padx=10, pady=10, fill="x")
 
     ttk.Radiobutton(compress_frame, text="JPEG", variable=compress_var, value="JPEG").pack(anchor="w")
-    ttk.Radiobutton(compress_frame, text="Nomal", variable=compress_var, value="Nomal").pack(anchor="w")
+    ttk.Radiobutton(compress_frame, text="そのまま", variable=compress_var, value="Nomal").pack(anchor="w")
 
     # バックアップパス
     backup_frame = ttk.Frame(root, padding=10)
