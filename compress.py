@@ -3,6 +3,7 @@ import shutil
 from PIL import Image
 import piexif
 
+BUPS = r"C:\BackUp_Pictures"
 def compress_and_save_image(path):
     try:
         img = Image.open(path).convert("RGBA")
@@ -49,15 +50,17 @@ def get_latest_images(directory, limit=1):
 
 
 def main():
-    folder = os.getcwd()
+    folder = BUPS
     latest_images = get_latest_images(folder)
+    print(f"{latest_images}が入っています")
 
     for original_path in latest_images:
         name, _ = os.path.splitext(os.path.basename(original_path))
-        copy_path = os.path.join(folder, f"{name}_archive.jpg")
+        copy_path = os.path.join(folder, f"{name}.jpg")
 
         try:
             shutil.copy2(original_path, copy_path)
+            os.remove(original_path)
             compress_and_save_image(copy_path)
         except Exception as e:
             print(f"{original_path} の圧縮失敗：{e}")

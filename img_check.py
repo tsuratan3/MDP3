@@ -1,4 +1,5 @@
 import os
+import sys
 import json
 import time
 import shutil
@@ -15,7 +16,7 @@ INTERVAL = 3
 DEBUG =True
 SST = time.time()
 APP = None
-bool_run = False
+SCRIPT_DIR = None
 
 #フォルダ準備
 if not os.path.exists(BUPS):
@@ -62,7 +63,7 @@ def is_picture_file(file_path):
 
 def start_name_gui():
     try:
-        APP = subprocess.run(["python", "naming_gui.py", str()],capture_output=True, text=True, check=True)
+        APP = subprocess.run([sys.executable, "naming_gui.py", str()],capture_output=True, text=True, check=True)
         value = APP.stdout.strip()
         return value
     except Exception as e:
@@ -139,6 +140,7 @@ def process_file(file_path, ep):
             shutil.copy2(file_path, dp)
             if DEBUG:
                 print(f"{DLF}からファイルを複製しました：{file_path} → {dp}")
+            ep.add(file_path)
         elif (os.path.dirname(file_path) == SSF):
             shutil.copy2(file_path, dp)
             if DEBUG:
@@ -146,10 +148,22 @@ def process_file(file_path, ep):
             ep.add(file_path)
         else:
             print("ファイルが正しく移動しませんでした。")
-
+        
+        SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+        compress_py = os.path.join(SCRIPT_DIR, "compress.py")
+        if DEBUG:
+            print(f"圧縮方式は{config_compress}です")
         if (config_compress == "JPEG"):
+            if DEBUG:
+                print("圧縮を始めます。")
             try:
-                subprocess.run(["python", "compress.py"])
+                result = subprocess.run([sys.executable, compress_py],capture_output=True, text=True, check=True)
+                if DEBUG:
+                    print("cwd:", os.getcwd())
+                    print("args:", [sys.executable, compress_py])
+                    print("returncode:", result.returncode)
+                    print("stdout:", repr(result.stdout))
+                    print("stderr:", repr(result.stderr))
             except Exception as e:
                 messagebox.showerror("エラー", f"圧縮機能の起動に失敗しました\n{e}")         
         return True
