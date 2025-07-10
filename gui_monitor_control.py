@@ -31,6 +31,7 @@ def main():
     root = tk.Tk()
     root.title("Watch Man")
     root.geometry("400x420")
+    root.minsize(200, 400)
 
     # 設定変数
     naming_var = tk.StringVar(value=True)
