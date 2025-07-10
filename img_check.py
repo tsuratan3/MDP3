@@ -157,13 +157,7 @@ def process_file(file_path, ep):
             if DEBUG:
                 print("圧縮を始めます。")
             try:
-                result = subprocess.run([sys.executable, compress_py],capture_output=True, text=True, check=True)
-                if DEBUG:
-                    print("cwd:", os.getcwd())
-                    print("args:", [sys.executable, compress_py])
-                    print("returncode:", result.returncode)
-                    print("stdout:", repr(result.stdout))
-                    print("stderr:", repr(result.stderr))
+                subprocess.run([sys.executable, compress_py],capture_output=True, text=True, check=True)
             except Exception as e:
                 messagebox.showerror("エラー", f"圧縮機能の起動に失敗しました\n{e}")         
         return True
