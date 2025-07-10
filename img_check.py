@@ -161,7 +161,7 @@ def process_file(file_path, ep):
             except Exception as e:
                 messagebox.showerror("エラー", f"圧縮機能の起動に失敗しました\n{e}")         
         return True
-       
+
     except PermissionError:
         #ファイルがまだ使用中
         if DEBUG:

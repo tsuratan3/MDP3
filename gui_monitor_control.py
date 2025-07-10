@@ -1,7 +1,6 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
 import json
-import threading
 import subprocess
 import os
 
@@ -32,6 +31,7 @@ def main():
     root = tk.Tk()
     root.title("Watch Man")
     root.geometry("400x420")
+    root.minsize(200, 400)
 
     # 設定変数
     naming_var = tk.StringVar(value=True)
@@ -45,13 +45,6 @@ def main():
     ttk.Radiobutton(naming_frame, text="随時命名", variable=naming_var, value="1").pack(anchor="w")
     # ttk.Radiobutton(naming_frame, text="命名統合", variable=naming_var, value="2").pack(anchor="w")
     ttk.Radiobutton(naming_frame, text="そのまま", variable=naming_var, value="0").pack(anchor="w")
-
-    # 圧縮方式
-    # def on_compression_selected():
-    #     print("※ 圧縮機能は未実装です")
-    
-    # def off_compression_selected():
-    #     print("※ 圧縮機能は未実装です")
 
     compress_frame = ttk.LabelFrame(root, text="圧縮方式", padding=10)
     compress_frame.pack(padx=10, pady=10, fill="x")
